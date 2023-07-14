@@ -22,7 +22,6 @@ public abstract class UnitAttacking extends Unit {
             abilityPoints += 1;
             return true;
         }
-
         return false;
     }
 

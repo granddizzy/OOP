@@ -21,7 +21,7 @@ public class Monk extends UnitProtectiveWithoutShild {
         if (getAbilityPoints() == 2) {
             System.out.println("Мысли монаха");
             super.clearAbilityPoints();
-            super.decreaseDamage(target.getDefense() * 1);   // вот здесь как-то определить тип атаки
+            super.decreaseDamage(target.getDefense() * 1);
             return true;
         }
         return false;

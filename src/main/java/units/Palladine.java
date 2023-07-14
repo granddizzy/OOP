@@ -20,7 +20,7 @@ public class Palladine extends UnitProtectiveWithShield {
         if (getAbilityPoints() == 2) {
             System.out.println("Плащ защиты");
             super.clearAbilityPoints();
-            super.decreaseDamage(target.getDefense() * 1);   // вот здесь как-то определить тип атаки
+            super.decreaseDamage(target.getDefense() * 1);
             return true;
         }
 

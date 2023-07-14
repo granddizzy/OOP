@@ -4,12 +4,11 @@ public abstract class UnitAttackingWithWeapons extends UnitAttacking {
 
     private int stamina;
     private static final int STAMINACONC = 20;
-    private int baseWeapon;
+    public static final int BASEWEAPON = 15;
 
     public UnitAttackingWithWeapons(int health, int attack, int defence, UnitsTypes type, String name) {
         super(health, attack, defence, type, name);
         this.stamina = 100;
-        this.baseWeapon = 15;
     }
 
     public UnitAttackingWithWeapons(UnitsTypes type, String name) {
@@ -18,9 +17,9 @@ public abstract class UnitAttackingWithWeapons extends UnitAttacking {
 
     @Override
     public boolean performAnAttack(Unit unit) {
-        if (stamina - baseWeapon > 0) {
+        if (decreaseStamina(BASEWEAPON) > 0) {
             if (super.performAnAttack(unit)) {
-                stamina -= baseWeapon;
+                decreaseStamina(BASEWEAPON);
                 return true;
             }
 //        } else {
@@ -51,7 +50,8 @@ public abstract class UnitAttackingWithWeapons extends UnitAttacking {
         stamina += value;
     }
 
-    public void decreaseStamina(int value) {
+    public int decreaseStamina(int value) {
         stamina -= value;
+        return stamina;
     }
 }

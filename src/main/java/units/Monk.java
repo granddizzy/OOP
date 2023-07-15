@@ -37,4 +37,9 @@ public class Monk extends UnitProtectiveWithoutShild {
     public boolean applyAbility(Unit targetUnit) {
         return mindMonk(targetUnit);
     }
+
+    @Override
+    public void restoringParameters() {
+        super.restoringParameters(Unit.baseAtack + Equipment.kesa_and_beads.getAttack(), Unit.baseDefence + Equipment.kesa_and_beads.getDefend());
+    }
 }

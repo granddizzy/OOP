@@ -54,4 +54,6 @@ public abstract class UnitAttackingWithWeapons extends UnitAttacking {
         stamina -= value;
         return stamina;
     }
+
+    public abstract void restoringParameters();
 }

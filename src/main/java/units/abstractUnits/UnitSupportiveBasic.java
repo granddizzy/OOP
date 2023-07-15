@@ -14,4 +14,6 @@ public abstract class UnitSupportiveBasic extends UnitSupportive {
         unit.decreaseAttack(5);
         return true;
     }
+
+    public abstract void restoringParameters();
 }

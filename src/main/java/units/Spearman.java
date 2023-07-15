@@ -40,4 +40,9 @@ public class Spearman extends UnitAttackingWithWeapons {
 
         return res;
     }
+
+    @Override
+    public void restoringParameters() {
+        super.restoringParameters(Unit.baseAtack + Equipment.spear_and_cuirass.getAttack(), Unit.baseDefence + Equipment.spear_and_cuirass.getDefend());
+    }
 }

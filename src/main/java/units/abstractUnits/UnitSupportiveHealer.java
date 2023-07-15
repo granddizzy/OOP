@@ -22,4 +22,6 @@ public abstract class UnitSupportiveHealer extends UnitSupportive {
     public void smallHeal(Unit unit) {
         unit.addHealth(baseSpellHeal);
     }
+
+    public abstract void restoringParameters();
 }

@@ -17,7 +17,7 @@ public class Arena implements ArenaInterface {
         return teams;
     }
 
-    private ArrayList<Unit> initiative;
+    private ArrayList<Unit> initiative = new ArrayList<>();
 
     private View view;
 
@@ -97,6 +97,8 @@ public class Arena implements ArenaInterface {
             this.setInitiative();
             //каждый юнит делает ход в порядке уменьшения инициативы
             for (Unit unit : initiative) {
+                if (unit.getHealth() == 0) continue;
+
                 view.showWhoseMove(this.getUnitTeam(unit), unit);
 
                 //восстанавливаем очки активности
@@ -116,6 +118,8 @@ public class Arena implements ArenaInterface {
 ////                        Дальники: Арбалетчик, монах, снайпер, чародей (ему уменьшить дальности на 1 клетку), волшебник
 
             }
+
+            this.restoringParameters();
         }
 //        }
 
@@ -377,15 +381,39 @@ public class Arena implements ArenaInterface {
     }
 
     public void setInitiative() {
-        this.initiative = new ArrayList<>();
+        this.initiative.clear();
 
-        for (Team team: teams) {
+        for (Team team : teams) {
             for (Unit unit : team) {
                 this.initiative.add(unit);
             }
         }
 
         Collections.shuffle(initiative);
+    }
 
+    private void restoringParameters() {
+        for (Unit unit : initiative) {
+            if (unit instanceof Crossbowman)
+                ((Crossbowman) unit).restoringParameters();
+            else if (unit instanceof Druid)
+                ((Druid) unit).restoringParameters();
+            else if (unit instanceof Monk)
+                ((Monk) unit).restoringParameters();
+            else if (unit instanceof Palladine)
+                ((Palladine) unit).restoringParameters();
+            else if (unit instanceof Peasant)
+                ((Peasant) unit).restoringParameters();
+            else if (unit instanceof Robber)
+                ((Robber) unit).restoringParameters();
+            else if (unit instanceof Sniper)
+                ((Sniper) unit).restoringParameters();
+            else if (unit instanceof Sorcerer)
+                ((Sorcerer) unit).restoringParameters();
+            else if (unit instanceof Spearman)
+                ((Spearman) unit).restoringParameters();
+            else if (unit instanceof Wizard)
+                ((Wizard) unit).restoringParameters();
+        }
     }
 }

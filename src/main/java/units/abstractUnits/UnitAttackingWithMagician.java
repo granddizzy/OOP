@@ -44,5 +44,7 @@ public abstract class UnitAttackingWithMagician extends UnitAttacking {
         }
         return false;
     }
+
+    public abstract void restoringParameters();
 }
 

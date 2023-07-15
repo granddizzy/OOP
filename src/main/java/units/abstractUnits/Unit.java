@@ -24,11 +24,14 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
 
     protected KindOfBattle kindOfBattle;
 
+    public final static int baseAtack = 5;
+    public final static int baseDefence = 2;
+
 
     public Unit(int health, int defense, int attack, UnitsTypes type, String name) {
         this.health = 50 + health;
-        this.defense = 2 + defense;
-        this.attack = 5 + attack;
+        this.defense = baseDefence + defense;
+        this.attack = baseAtack + attack;
         speed = 3;
         pointActivites = 1;
         defended = false;
@@ -260,5 +263,10 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
         }
 
         return false;
+    }
+
+    public void restoringParameters(int attack, int defense) {
+        this.attack = attack;
+        this.defense = defense;
     }
 }

@@ -14,7 +14,6 @@ public class Crossbowman extends UnitAttackingWithWeapons {
     public Crossbowman(String name) {
         super(Equipment.crossbow_and_helmet.getHealth(), Equipment.crossbow_and_helmet.getAttack(),
                 Equipment.crossbow_and_helmet.getDefend(), UnitsTypes.Crossbowman, name);
-
     }
 
     @Override
@@ -33,6 +32,11 @@ public class Crossbowman extends UnitAttackingWithWeapons {
 //            System.out.println("extraActivites <= 0");
         }
         return false;
+    }
+
+    @Override
+    public void restoringParameters() {
+        super.restoringParameters(Unit.baseAtack + Equipment.crossbow_and_helmet.getAttack(), Unit.baseDefence + Equipment.crossbow_and_helmet.getDefend());
     }
 
     public boolean arrow_to_the_knee(Unit unit) {

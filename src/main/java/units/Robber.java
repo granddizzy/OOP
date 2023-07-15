@@ -52,4 +52,9 @@ public class Robber extends UnitAttackingWithWeapons {
 
         return res;
     }
+
+    @Override
+    public void restoringParameters() {
+        super.restoringParameters(Unit.baseAtack + Equipment.knives_and_cloak.getAttack(), Unit.baseDefence + Equipment.knives_and_cloak.getDefend());
+    }
 }

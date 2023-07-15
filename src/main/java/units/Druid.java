@@ -48,4 +48,9 @@ public class Druid extends UnitSupportiveHealer {
             targetUnit.addHealth(bigSpellHeal = new Random().nextInt(15, 30)*2);
         }
     }
+
+    @Override
+    public void restoringParameters() {
+        super.restoringParameters(Unit.baseAtack + Equipment.frogfoot_and_bearskin.getAttack(), Unit.baseDefence + Equipment.frogfoot_and_bearskin.getDefend());
+    }
 }

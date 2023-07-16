@@ -18,10 +18,9 @@ public abstract class UnitAttackingWithWeapons extends UnitAttacking {
     @Override
     public boolean performAnAttack(Unit unit) {
         if (decreaseStamina(BASEWEAPON) > 0) {
-        if (this.stamina - this.baseWeapon > 0) {
             if (super.performAnAttack(unit)) {
                 decreaseStamina(BASEWEAPON);
-                this.stamina -= this.baseWeapon;
+                this.stamina -= BASEWEAPON;
                 return true;
             }
 //        } else {

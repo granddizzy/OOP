@@ -59,4 +59,8 @@ public interface UnitInterface {
      * @return
      */
     boolean applyAbility(Unit targetUnit);
+
+    boolean isInDiapason(Unit targetUnit);
+
+    String getCharacterRepresentation();
 }

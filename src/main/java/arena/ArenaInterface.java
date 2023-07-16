@@ -10,7 +10,7 @@ public interface ArenaInterface {
      * @param name
      * @param teamSize
      */
-    void createTeam(String name, int teamSize);
+    void createTeam(String name, int teamSize, String color);
 
     /**
      * Запускает бой

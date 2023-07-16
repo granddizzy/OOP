@@ -1,11 +1,9 @@
 package arena.map;
 
 import units.Coordinates;
-import units.Team;
 import units.abstractUnits.Unit;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 public class Map {
@@ -25,10 +23,6 @@ public class Map {
 
     public Object[][] getMatrix() {
         return matrix;
-    }
-
-    public Object getObjectOnTheMap(Coordinates coordinates) {
-        return matrix[coordinates.x][coordinates.y];
     }
 
     public void addPit(Pit pit) {
@@ -82,5 +76,13 @@ public class Map {
         }
 
         return coordinates;
+    }
+
+    public Object getField(int x, int y) {
+        return matrix[x][y];
+    }
+
+    public void clearField(int x, int y) {
+        matrix[x][y] = null;
     }
 }

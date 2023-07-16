@@ -3,6 +3,7 @@ package units.abstractUnits;
 import arena.Arena;
 import units.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Unit implements UnitInterface {   //implements AutoCloseable  попробовать?
@@ -24,9 +25,12 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
 
     protected KindOfBattle kindOfBattle;
 
-    public final static int baseAtack = 5;
+    public final static int baseAtack = 10;
     public final static int baseDefence = 2;
 
+    private Team team;
+
+    private ArrayList<SuperimposedAction> superimposedActions = new ArrayList<>();
 
     public Unit(int health, int defense, int attack, UnitsTypes type, String name) {
         this.health = 50 + health;
@@ -62,20 +66,16 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
         //* Ближники (не дальше 1 клетки)
         //* Дальники (5 клеток - 100% урон, до 7 клеток - 75% урона, до 9 клеток - 50%, 10 и более - не может атаковать)
 
-        System.out.println("Атакую: " + target);
+        // нельзя атаковать своего
+        if (target.team.equals(this.team)) return false;
 
-        if (getPointActivites() > 0) {
-            if (this.attack - target.getDefense() > 0) {
-                target.decreaseHealth(this.attack - target.getDefense());
-                decreasePointActivities();
-            } else {
-                System.out.println("Не прокатило");
+        if (this.getPointActivites() > 0) {
+            if (this.getAttack() - target.getDefense() > 0) {
+                target.decreaseHealth(this.getAttack() - target.getDefense());
+                this.decreasePointActivities();
             }
-
             return true;
         } else {
-            System.out.println("Нет очков активности");
-
             return false;
         }
     }
@@ -89,7 +89,7 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
     }
 
     public void clearPointActivites() {
-        System.out.println("Сброс очков активности");
+//        System.out.println("Сброс очков активности");
         pointActivites = 0;
     }
 
@@ -98,7 +98,15 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
     }
 
     public int getAttack() {
-        return attack;
+        int calculatedAttack = attack;
+        for (SuperimposedAction act : superimposedActions) {
+            calculatedAttack += act.attackChangeValue;
+        }
+
+        if (calculatedAttack < 0) calculatedAttack = 0;
+        else if (calculatedAttack > 100) calculatedAttack = 100;
+
+        return calculatedAttack;
     }
 
     public void increaseAttack(int value) {
@@ -112,7 +120,6 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
             attack = 0;
         }
     }
-
 
     public void setPointActivites(int value) {
         pointActivites = value;
@@ -132,6 +139,10 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
 
     public void addHealth(int value) {
         health += value;
+
+        if (health > 100) {
+            health = 100;
+        }
     }
 
     public void decreaseHealth(int value) {
@@ -142,7 +153,6 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
         }
     }
 
-    // реализовать смерть посредством удаления юнита из списка на "арене"
     public void die() {
         health = 0;
     }
@@ -172,8 +182,7 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
     }
 
     public String getUnitBaseInfo() {
-        return "Тип: " + type.toString() + " Имя: " + name + " Здоровье: " + health + " Атака: " + attack + " Защита: " + defense;
-
+        return "" + type.toString() + " " + name + " Ж:" + this.getHealth() + " А:" + this.getAttack() + " З:" + this.getDefense() + " С:" + this.getSpeed();
     }
 
     @Override
@@ -188,21 +197,22 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
 
 
     public String getShortInfo() {
-        return "Тип: " + type.toString() + " Имя: " + name + " Здоровье: " + health;
+        return this.type.toString() + " " + this.name;
     }
 
     @Override
     public void step(Arena arena) {
-        Unit targetUnit = findTarget(arena);
+        Unit targetUnit = this.findTarget(arena);
+
+        //arena.addArenaMessage(null, this,  "ход ");
 
         if (targetUnit == null) {
-            System.out.println("Цель: не найдена");
+            arena.addArenaMessage(this, null, " Цель не найдена ");
         } else {
-            System.out.println("Цель: " + arena.getUnitTeam(targetUnit).name + " " + targetUnit + " " + targetUnit.getCoordinates());
-
             if (this.isInDiapason(targetUnit)) {
                 this.actionInDiapason(arena, targetUnit, false);
             } else {
+                this.decreasePointActivities();
                 arena.doMove(this, targetUnit.getCoordinates());
                 if (this.isInDiapason(targetUnit)) {
                     this.actionInDiapason(arena, targetUnit, true);
@@ -215,7 +225,15 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
 
     // Все геттеры и сеттеры:
     public int getDefense() {
-        return defense;
+        int calculatedDefense = defense;
+        for (SuperimposedAction act : superimposedActions) {
+            calculatedDefense += act.defendChangeValue;
+        }
+
+        if (calculatedDefense < 0) calculatedDefense = 0;
+        else if (calculatedDefense > 100) calculatedDefense = 100;
+
+        return calculatedDefense;
     }
 
     public void setAttack(int value) {
@@ -235,7 +253,15 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
     }
 
     public int getSpeed() {
-        return speed;
+        int calculatedSpeed = speed;
+        for (SuperimposedAction act : superimposedActions) {
+            calculatedSpeed += act.speedChangeValue;
+        }
+
+        if (calculatedSpeed < 0) calculatedSpeed = 0;
+        else if (calculatedSpeed > 100) calculatedSpeed = 100;
+
+        return calculatedSpeed;
     }
 
     public int getHealth() {
@@ -251,22 +277,50 @@ public abstract class Unit implements UnitInterface {   //implements AutoCloseab
     }
 
     /**
-     * Проверяет назодиться ли цель в максимальном диапазоне действий
+     * Возвращает команду персонажа
      *
-     * @param targetUnit
      * @return
      */
-    protected boolean isInDiapason(Unit targetUnit) {
-        if (this.distanceSkill >= this.getCoordinates().calculateDistance(targetUnit.getCoordinates())) {
-            System.out.println("Цель в диапазоне");
-            return true;
-        }
-
-        return false;
+    public Team getTeam() {
+        return team;
     }
 
-    public void restoringParameters(int attack, int defense) {
-        this.attack = attack;
-        this.defense = defense;
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    /**
+     * Добавляет наложенное временное воздействие
+     *
+     * @param name
+     * @param period
+     * @param attackChangeValue
+     * @param defendChangeValue
+     * @param speedChangeValue
+     */
+    public void addSuperimposedAction(String name, int period, int attackChangeValue, int defendChangeValue, int speedChangeValue) {
+        this.superimposedActions.add(new SuperimposedAction(name, period, attackChangeValue, defendChangeValue, speedChangeValue));
+    }
+
+    /**
+     * Получает список временных воздействий
+     *
+     * @return
+     */
+    public ArrayList<SuperimposedAction> getSuperimposedActions() {
+        return superimposedActions;
+    }
+
+    /**
+     * Удаляет наложенное временное воздействие
+     *
+     * @param act
+     */
+    public void removeSuperimposedAction(SuperimposedAction act) {
+        superimposedActions.remove(act);
+    }
+
+    public void skipAMove() {
+        this.clearPointActivites();
     }
 }

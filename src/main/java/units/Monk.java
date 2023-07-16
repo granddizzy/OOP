@@ -6,6 +6,8 @@ import units.abstractUnits.Unit;
 import units.abstractUnits.UnitProtectiveWithoutShild;
 import units.abstractUnits.UnitsTypes;
 
+import java.util.Random;
+
 /**
  * Монах
  */
@@ -17,11 +19,27 @@ public class Monk extends UnitProtectiveWithoutShild {
                 Equipment.kesa_and_beads.getDefend(), UnitsTypes.Monk, name);
     }
 
+    /**
+     * Мысли монаха
+     * @param target
+     * @return
+     */
     public boolean mindMonk(Unit target) {
         if (getAbilityPoints() == 2) {
-            System.out.println("Мысли монаха");
+            super.clearAbilityPoints();
+            //super.decreaseDamage(target.getDefense() * 1);   // вот здесь как-то определить тип атаки
+
+            target.addSuperimposedAction("Мысли монаха", 1,0, target.getDefense(), 0);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean monkSHand(Unit target) {
+        if (getAbilityPoints() == 2) {
             super.clearAbilityPoints();
             super.decreaseDamage(target.getDefense() * 1);
+            target.addSuperimposedAction("Рука монаха", 1,0, 100, 0);
             return true;
         }
         return false;
@@ -34,12 +52,30 @@ public class Monk extends UnitProtectiveWithoutShild {
     }
 
     @Override
-    public boolean applyAbility(Unit targetUnit) {
-        return mindMonk(targetUnit);
+    public Unit findTarget2(Arena arena) {
+        return arena.findAUnitWithMinimumHealth(this, true);
     }
 
     @Override
-    public void restoringParameters() {
-        super.restoringParameters(Unit.baseAtack + Equipment.kesa_and_beads.getAttack(), Unit.baseDefence + Equipment.kesa_and_beads.getDefend());
+    public boolean applyAbility(Unit targetUnit) {
+        switch (new Random().nextInt(2)) {
+            case 0 -> {
+                return mindMonk(targetUnit);
+            }
+            case 1 -> {
+                return monkSHand(targetUnit);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isInDiapason(Unit targetUnit) {
+        return this.distanceSkill >= this.getCoordinates().calculateDistance(targetUnit.getCoordinates());
+    }
+
+    @Override
+    public String getCharacterRepresentation() {
+        return "Mnk";
     }
 }

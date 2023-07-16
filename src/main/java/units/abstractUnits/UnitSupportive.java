@@ -5,11 +5,11 @@ import arena.Arena;
 public abstract class UnitSupportive extends Unit {
 
     private int speed;
-    private int pointActivites;
+    //private int pointActivites;
 
     public UnitSupportive(int health, int defense, int attack, UnitsTypes type, String name) {
         super(health, defense, attack, type, name);
-        pointActivites = super.getPointActivites() * 2;
+        speed = super.getSpeed() * 2;
     }
 
     public UnitSupportive(UnitsTypes type, String name) {
@@ -18,38 +18,24 @@ public abstract class UnitSupportive extends Unit {
 
     public void actionInDiapason(Arena arena, Unit targetUnit, boolean moveMade) {
         if (!this.applyAbility(targetUnit)) {
-            // если не смогли применить спобосность
-            if (this.performAnAttack(targetUnit)) {
-                // если смогли атаковать
+            // всегда применяет
 
-                //проверяем убили ли
-                if (targetUnit.getHealth() == 0) {
-                    // выносим труп
-                    arena.removeTheCorpse(targetUnit);
-                }
+        } else {
+            arena.addArenaMessage(this, targetUnit, " способности на ");
 
-                if (!moveMade) {
-                    // если шаг НЕ сделан
-                    //this.concentration();
-                }
-            } else {
-                // если не смогли атаковать
-                if (!moveMade) {
-                    // если шаг НЕ сделан
-                    this.clearPointActivites();
-                }
-            }
+            // убежать
+            //arena.doMove();
         }
     }
 
     @Override
     public void actionNotInDiapason(Arena arena, Unit targetUnit, boolean moveMade) {
         if (moveMade) {
-            // если шаг сделан
-            //if (!this.concentration()) {
-                // если не смогли сконцентрироваться
-                this.clearPointActivites();
-            //}
+            // если шаг сделаня
+            arena.addArenaMessage(this, targetUnit, " подошел к ");
+        } else {
+            arena.addArenaMessage(this, null, " пропустил ход");
+            this.skipAMove();
         }
     }
 }

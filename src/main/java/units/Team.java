@@ -5,16 +5,15 @@ import units.abstractUnits.Unit;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
-
 
 public class Team implements Iterator<Unit>, Iterable<Unit> {
     public final String name;
-
+    public final String color;
     private ArrayList<Unit> teamList = new ArrayList<>();
 
-    public Team(String name) {
+    public Team(String name, String color) {
         this.name = name;
+        this.color = color;
     }
 
     public ArrayList<Unit> getUnits() {
@@ -23,6 +22,7 @@ public class Team implements Iterator<Unit>, Iterable<Unit> {
 
     public void addUnit(Unit unit) {
         teamList.add(unit);
+        unit.setTeam(this);
     }
 
     public int getNumberOfUnits() {
@@ -48,6 +48,7 @@ public class Team implements Iterator<Unit>, Iterable<Unit> {
         Iterator<Unit> it = new Iterator<Unit>() {
 
             private int index = -1;
+
             @Override
             public boolean hasNext() {
                 index++;
@@ -75,18 +76,14 @@ public class Team implements Iterator<Unit>, Iterable<Unit> {
         teamList.remove(unit);
     }
 
-//    /**
-//     * Выстраивает команду в порядке инициативы
-//     */
-//    public void setTheInitiative() {
-//        ArrayList<Unit> tmp = new ArrayList<>(this.teamList.size());
-//
-//        while (this.getSize() > 0) {
-//            int i = new Random().nextInt(this.getSize());
-//            tmp.add(this.getUnits().get(i));
-//            this.getUnits().remove(i);
-//        }
-//
-//        this.teamList = tmp;
-//    }
+    public Unit getUnit(int index) {
+        if (index <= teamList.size() - 1) return teamList.get(index);
+
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

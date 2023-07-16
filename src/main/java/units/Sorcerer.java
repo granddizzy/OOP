@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Sorcerer extends UnitAttackingWithMagician {
     int extraActivities = 1;
-    int distanceSkill = 8;
+    public final int distanceSkill = 8;
 
     public Sorcerer(String name) {
         super(Equipment.runes_and_powders.getHealth(), Equipment.runes_and_powders.getAttack(),
@@ -33,7 +33,7 @@ public class Sorcerer extends UnitAttackingWithMagician {
 
     public boolean tricks(Unit target) {
         if (getAbilityPoints() == 2) {
-            System.out.println("Трюки.");
+//            System.out.println("Трюки.");
             super.clearPointAbility();
             switch (new Random().nextInt(1, 3)) {
                 case 1 -> target.decreaseSpeed(1);
@@ -61,7 +61,12 @@ public class Sorcerer extends UnitAttackingWithMagician {
     }
 
     @Override
-    public void restoringParameters() {
-        super.restoringParameters(Unit.baseAtack + Equipment.runes_and_powders.getAttack(), Unit.baseDefence + Equipment.runes_and_powders.getDefend());
+    public boolean isInDiapason(Unit targetUnit) {
+        return this.distanceSkill >= this.getCoordinates().calculateDistance(targetUnit.getCoordinates());
+    }
+
+    @Override
+    public String getCharacterRepresentation() {
+        return "Srr";
     }
 }

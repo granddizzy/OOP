@@ -30,12 +30,7 @@ public class Druid extends UnitSupportiveHealer {
 
     @Override
     public boolean applyAbility(Unit targetUnit) {
-        return ability();
-    }
-
-    public boolean ability() {
-
-        return false;
+        return super.smallHeal(targetUnit);
     }
     public void middleHeal(Unit targetUnit){
         if (usingMiddleHeal < 2) {
@@ -50,7 +45,12 @@ public class Druid extends UnitSupportiveHealer {
     }
 
     @Override
-    public void restoringParameters() {
-        super.restoringParameters(Unit.baseAtack + Equipment.frogfoot_and_bearskin.getAttack(), Unit.baseDefence + Equipment.frogfoot_and_bearskin.getDefend());
+    public boolean isInDiapason(Unit targetUnit) {
+        return this.distanceSkill >= this.getCoordinates().calculateDistance(targetUnit.getCoordinates());
+    }
+
+    @Override
+    public String getCharacterRepresentation() {
+        return "Drd";
     }
 }

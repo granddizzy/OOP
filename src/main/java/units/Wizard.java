@@ -11,7 +11,7 @@ import units.abstractUnits.UnitsTypes;
  */
 public class Wizard extends UnitAttackingWithMagician {
     private boolean using_lightning_storm;
-    int distanceSkill = 9;
+    public final int distanceSkill = 9;
 
     public Wizard(String name) {
         super(Equipment.mantle_and_wand.getHealth(), Equipment.mantle_and_wand.getAttack(),
@@ -21,7 +21,7 @@ public class Wizard extends UnitAttackingWithMagician {
     public boolean lightning_storm(Unit target1, Unit target2, Unit target3) {
         if (getAbilityPoints() == 2) {
             if (using_lightning_storm == false) {
-                System.out.println("Шторм молний");
+//                System.out.println("Шторм молний");
                 super.clearPointAbility();
                 target1.decreaseHealth(getHealth() / 2);
                 //target2.decreaseHealth(getHealth() / 3);
@@ -49,7 +49,12 @@ public class Wizard extends UnitAttackingWithMagician {
     }
 
     @Override
-    public void restoringParameters() {
-        super.restoringParameters(Unit.baseAtack + Equipment.mantle_and_wand.getAttack(), Unit.baseDefence + Equipment.mantle_and_wand.getDefend());
+    public boolean isInDiapason(Unit targetUnit) {
+        return this.distanceSkill >= this.getCoordinates().calculateDistance(targetUnit.getCoordinates());
+    }
+
+    @Override
+    public String getCharacterRepresentation() {
+        return "Wzd";
     }
 }

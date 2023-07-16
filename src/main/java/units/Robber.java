@@ -16,7 +16,7 @@ public class Robber extends UnitAttackingWithWeapons {
     }
     public boolean theft(Unit target){
         if (getAbilityPoints() == 2) {
-            System.out.println("Ворую.");
+//            System.out.println("Ворую.");
             super.clearPointAbility();
             for (int i = 0; i < 2; i++) {
                 target.decreasePointActivities();
@@ -29,7 +29,7 @@ public class Robber extends UnitAttackingWithWeapons {
     }
     public boolean jab(Unit target){
         if (getAbilityPoints() == 2){
-            System.out.println("jab");
+//            System.out.println("jab");
             super.clearPointAbility();
             target.decreasePointActivities();
             target.decreaseHealth(10);
@@ -54,7 +54,12 @@ public class Robber extends UnitAttackingWithWeapons {
     }
 
     @Override
-    public void restoringParameters() {
-        super.restoringParameters(Unit.baseAtack + Equipment.knives_and_cloak.getAttack(), Unit.baseDefence + Equipment.knives_and_cloak.getDefend());
+    public boolean isInDiapason(Unit targetUnit) {
+        return this.distanceSkill >= this.getCoordinates().calculateDistance(targetUnit.getCoordinates());
+    }
+
+    @Override
+    public String getCharacterRepresentation() {
+        return "Rbr";
     }
 }

@@ -6,6 +6,8 @@ import units.abstractUnits.Unit;
 import units.abstractUnits.UnitSupportiveBasic;
 import units.abstractUnits.UnitsTypes;
 
+import java.util.Random;
+
 /**
  * Крестьянин
  */
@@ -23,18 +25,43 @@ public class Peasant extends UnitSupportiveBasic {
 
     @Override
     public boolean applyAbility(Unit targetUnit) {
-        return pokeWithAPitchfork(targetUnit);
-    }
-
-    public boolean pokeWithAPitchfork(Unit targetUnit) {
-//        if (getA) {
-//
-//        }
+        switch (new Random().nextInt(3)) {
+            case 0 -> {
+                return pokeWithAPitchfork(targetUnit);
+            }
+            case 1 -> {
+                return digAPit(targetUnit);
+            }
+            case 2 -> {
+                return kickInTheLegs(targetUnit);
+            }
+        }
         return false;
     }
 
+    public boolean pokeWithAPitchfork(Unit targetUnit) {
+        //тычек вилами
+        this.performAnAttack(targetUnit);
+
+        return true;
+    }
+
+    public boolean digAPit(Unit targetUnit) {
+        return false;
+    }
+
+    public boolean kickInTheLegs(Unit targetUnit) {
+        targetUnit.addSuperimposedAction("Удар по ногам", 3, 0,0,-1);
+        return true;
+    }
+
     @Override
-    public void restoringParameters() {
-        super.restoringParameters(Unit.baseAtack + Equipment.pitchfork_and_robe.getAttack(), Unit.baseDefence + Equipment.pitchfork_and_robe.getDefend());
+    public boolean isInDiapason(Unit targetUnit) {
+        return this.distanceSkill >= this.getCoordinates().calculateDistance(targetUnit.getCoordinates());
+    }
+
+    @Override
+    public String getCharacterRepresentation() {
+        return "Pst";
     }
 }
